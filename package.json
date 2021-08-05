@@ -1,0 +1,16 @@
+{
+  "name": "modularni-urad-admin-components",
+  "version": "0.1.0",
+  "author": "Vaclav Klecanda <vencax77@gmail.com> (http://vxk.cz)",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node --inspect dev/server.js"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.26.14",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^2.0.1",
+    "bootstrap-vue-dynamic-form": "github:vencax/bootstrap-vue-dynamic-form"
+  }
+}

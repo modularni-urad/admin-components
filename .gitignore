@@ -1,0 +1,13 @@
+package-lock.json
+npm-debug.log
+node_modules/
+./index.html
+dist/bundle.js
+*.min.jss
+vars.env
+.*
+js/main.js
+*.sh
+*.sqlite
+.cache
+dev
