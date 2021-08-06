@@ -1,5 +1,5 @@
 /* global Vue, VueRouter */
-import store from './store.js'
+import Store from './store.js'
 import DynComponents from './bootstrap-vue-dynamic-form/index.js'
 import { 
   WITHOUT_DIACRITICS_VALIDATOR_NAME, WITHOUT_DIACRITICS_VALIDATOR 
@@ -33,6 +33,7 @@ const router = new VueRouter({
     }
   }]
 })
+const store = Store(router, cfg)
 
 new Vue({
   router,
