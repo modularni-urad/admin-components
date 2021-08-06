@@ -21,11 +21,11 @@ export default {
   methods: {
     left: function () {
       const query = Object.assign({}, this.query, { [PAGE]: this.cp - 1 })
-      this.$router.push({ query })
+      this.$router.replace({ query })
     },
     right: function () {
       const query = Object.assign({}, this.query, { [PAGE]: this.cp + 1 })
-      this.$router.push({ query })
+      this.$router.replace({ query })
     }
   },
   template: `

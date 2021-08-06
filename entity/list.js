@@ -29,11 +29,17 @@ export default {
     }
   },
   props: ['cfg', 'query', 'saveHooks', 'actionsComponent'],
-  watch: {
-    '$route': 'fetchData'  // call again the method if the route changes
-  },
-  created () {    
-    this.fetchData()
+  created () {
+    initListData(this.$props, this.$data)
+    this.$watch(
+      () => this.$route.query,
+      () => {
+        this.fetchData()
+      },
+      // fetch the data when the view is created and the data is
+      // already being observed
+      { immediate: true }
+    )
   },
   computed: {
     fields: function () {
@@ -42,7 +48,6 @@ export default {
   },
   methods: {
     fetchData: async function () {
-      !this.ready && await initListData(this.$props, this.$data)
       const params = {
         currentPage: this.query[PAGE] || 1,
         perPage: this.query[PAGESIZE] || 10,
@@ -65,7 +70,7 @@ export default {
     },
     setPageSize: function (newSize) {
       const query = Object.assign({}, this.query, { [PAGESIZE]: newSize })
-      this.$router.push({ query })
+      this.$router.replace({ query })
     },
     add: function () {
       this.$data.curr = null

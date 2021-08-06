@@ -18,7 +18,7 @@ export default {
       this.sortDir === 'desc' 
         ? delete query[SORT]
         : Object.assign(query, { [SORT]: `${this.$props.field.key},${dir}` })
-      this.$router.push({ query })
+      this.$router.replace({ query })
     }
   },
   template: `
