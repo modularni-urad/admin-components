@@ -59,3 +59,15 @@ export function getFields (self) {
   fields.push({ key: 'actions', label: '' })
   return fields
 }
+
+export function defaultSaveData (data, currItem, props, store) {
+  const url = currItem ? `${props.cfg.url}${currItem.id}` : props.cfg.url
+  const method = currItem ? 'put' : 'post'
+  return store.dispatch('send', { method, url, data })
+}
+
+export function loadData (props, itemId, store) {
+  const filter = { id: itemId }
+  const url = `${props.cfg.url}?filter=${JSON.stringify(filter)}`
+  return store.dispatch('send', { method: 'get', url })
+}

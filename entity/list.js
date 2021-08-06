@@ -1,5 +1,5 @@
 /* global axios, API, _ */
-import ItemForm from './form.js'
+import Detail from './detail.js'
 import Paginator from './paginator.js'
 import template from './list.html.js'
 import { initListData, getFields } from './utils.js'
@@ -8,9 +8,15 @@ import THeader from './header.js'
 const { PAGE, PAGESIZE, SORT } = QEURY_ITEM_NAMES
 
 const DefaultActions = {
-  props: ['data', 'doEdit'],
+  props: ['query', 'row'],
+  methods: {
+    doEdit: function () {
+      const query = Object.assign({}, this.query, { _detail: this.row.id })
+      this.$router.replace({ query })
+    }
+  },
   template: `
-  <b-button size="sm" variant="primary" @click="doEdit(data.item)">
+  <b-button size="sm" variant="primary" @click="doEdit">
     <i class="fas fa-edit"></i> upravit
   </b-button>
   `
@@ -23,8 +29,6 @@ export default {
       isBusy: false,
       totalRows: null,
       ready: false,
-      curr: null,
-      item: {},
       items: []
     }
   },
@@ -36,8 +40,7 @@ export default {
       () => {
         this.fetchData()
       },
-      // fetch the data when the view is created and the data is
-      // already being observed
+      // fetch the data when the view is created and the data is already being observed
       { immediate: true }
     )
   },
@@ -73,38 +76,12 @@ export default {
       this.$router.replace({ query })
     },
     add: function () {
-      this.$data.curr = null
-      this.$bvModal.show('modal-add')
-    },
-    edit: function (item) {
-      this.$data.curr = item
-      this.$bvModal.show('modal-add')
+      this.$router.replace({ query: Object.assign({}, this.query, { _detail: null }) })
     },
     cellData: function (item, field) {
       return item[field.key]
-    },
-    onSubmit: async function (item) {
-      if (!item) return this.$bvModal.hide('modal-add')
-      const p = this.$props
-      try {
-        const data = p.saveHooks && p.saveHooks.prepare 
-          ? await p.saveHooks.prepare(this, item) : item
-        const url = this.curr ? `${p.cfg.url}${this.curr.id}` : p.cfg.url
-        const method = this.curr ? 'put' : 'post'
-        const res = await this.$store.dispatch('send', { method, url, data })
-        p.saveHooks && p.saveHooks.finish 
-            && await p.saveHooks.finish(this, item, res.data)
-        this.$store.dispatch('toast', { message: 'uloženo' })
-        this.curr
-          ? Object.assign(this.curr, res.data)
-          : this.$refs.table.refresh()
-        this.$bvModal.hide('modal-add')
-      } catch (err) {
-        const message = err.response.data
-        this.$store.dispatch('toast', { message, type: 'error' })
-      }
     }
   },
-  components: { THeader, Paginator, ItemForm, DefaultActions },
+  components: { THeader, Paginator, Detail, DefaultActions },
   template
 }

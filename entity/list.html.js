@@ -17,11 +17,13 @@ export default `
         <THeader v-for="i,idx in fields" :key="idx" :field="i" :query="query">
           {{ i.label }}
         </THeader>
+        <th></th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="i, idx in items" :key="idx">
         <td v-for="j,jidx in fields" :key="jidx">{{ cellData(i, j) }}</td>
+        <td key="actions"><DefaultActions :row="i" :query="query" /></td>
       </tr>
     </tbody>
   </table>
@@ -36,13 +38,7 @@ export default `
 
   <Paginator :totalRows="totalRows" :query="query" />
 
-  <b-modal v-if="ready" size="xl" id="modal-add" title="Upravit" hide-footer>
-    <ItemForm 
-      :config="formconfig" 
-      :onSubmit="onSubmit" 
-      :item="curr" 
-      :showcancel="true" />
-  </b-modal>
+  <Detail :query="query" :cfg="cfg" :formconfig="formconfig" />
 
 </div>
 `
