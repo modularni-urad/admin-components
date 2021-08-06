@@ -1,6 +1,9 @@
 /* global axios, API, _ */
 import ItemForm from './form.js'
+import Paginator from './paginator.js'
 import template from './list.html.js'
+import { initListData } from './utils.js'
+import THeader from './header.js'
 
 function formatDate (value) {
   if (value) {
@@ -27,40 +30,18 @@ export default {
   data: () => {
     return {
       formconfig: null,
-      ready: false,
       isBusy: false,
-      currentPage: 1,
-      totalRows: 0,
-      perPage: 10,
+      totalRows: null,
+      ready: false,
       curr: null,
-      currDetail: null,
-      item: {}
+      item: {},
+      items: []
     }
   },
   props: ['cfg', 'saveHooks', 'actionsComponent'],
-  async created () {
-    // console.log(this.$store.getters.UID);
-    if (_.isString(this.$props.cfg.conf)) {
-      const res = await axios.get(this.$props.cfg.conf)
-      this.$data.formconfig = res.data.attrs
-    } else {
-      this.$data.formconfig = this.$props.cfg.conf
-    }
-    const promises = _.reduce(this.$data.formconfig, (acc, i) => {
-      if (i.options && _.isString(i.options)) {
-        acc.push(axios.get(i.options).then(res => {
-          i.options = i.attrmap ? res.data.map(j => {
-            return {
-              text: j[i.attrmap.text || 'text'],
-              value: j[i.attrmap.value || 'value']
-            }
-          }) : res.data            
-        }))
-      }
-      return acc
-    }, [])
-    if (promises.length) await Promise.all(promises)
-    this.$data.ready = true
+  async created () {    
+    await initListData(this.$props, this.$data)
+    await this.load()
   },
   computed: {
     fields: function () {
@@ -87,29 +68,33 @@ export default {
     }
   },
   methods: {
-    myProvider (ctx) {
+    load: async function (ctx) {
+      const q = this.$router.currentRoute.query
       const params = {
-        currentPage: this.currentPage,
-        perPage: this.perPage,
-        sort: ctx.sortBy ? `${ctx.sortBy}:${ctx.sortDesc ? 'desc' : 'asc'}` : 'id:asc'
+        currentPage: q.currentPage || 1,
+        perPage: q.perPage || 10,
+        sort: q.sortBy ? `${q.sortBy}:${q.sortDesc ? 'desc' : 'asc'}` : 'id:asc'
       }
-      let data = null
-      return axios.get(this.$props.cfg.url, { params })
-        .then(res => {
-          this.totalRows = res.data.pagination.total
-            ? res.data.pagination.total
-            : this.totalRows
-          data = res.data.data
-          return data
-        })
-        .catch(err => {
-          const message = err.response.data
-          this.$store.dispatch('toast', { message, type: 'error' })
-          return []
-        })
+      try {
+        this.isBusy = true
+        const res = await axios.get(this.$props.cfg.url, { params })
+        this.totalRows = res.data.pagination.total
+          ? res.data.pagination.total
+          : this.totalRows
+        this.items = res.data.data
+      } catch (err) {
+        const message = err.response.data
+        this.$store.dispatch('toast', { message, type: 'error' })
+        this.items = []
+      } finally {
+        this.isBusy = false
+      }
     },
     setPageSize: function (newSize) {
-      this.perPage = newSize
+      const query = Object.assign({}, this.$router.currentRoute.query, {
+        perPage: newSize
+      })
+      this.$router.push({ query })
     },
     add: function () {
       this.$data.curr = null
@@ -118,6 +103,9 @@ export default {
     edit: function (item) {
       this.$data.curr = item
       this.$bvModal.show('modal-add')
+    },
+    cellData: function (item, field) {
+      return item[field.key]
     },
     onSubmit: async function (item) {
       if (!item) return this.$bvModal.hide('modal-add')
@@ -141,8 +129,6 @@ export default {
       }
     }
   },
-  components: {
-    'item-form': ItemForm, DefaultActions
-  },
+  components: { THeader, Paginator, ItemForm, DefaultActions },
   template
 }
