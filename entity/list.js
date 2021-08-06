@@ -2,20 +2,10 @@
 import ItemForm from './form.js'
 import Paginator from './paginator.js'
 import template from './list.html.js'
-import { initListData } from './utils.js'
+import { initListData, getFields } from './utils.js'
+import { QEURY_ITEM_NAMES } from './consts.js'
 import THeader from './header.js'
-
-function formatDate (value) {
-  if (value) {
-    value = _.isString(value) ? moment(value) : value
-    return value.format('DD.MM.YYYY HH:mm')
-  }
-}
-
-const getOptionsFormatter = (options) => (value) => {
-  const o = _.find(options, i => i.value === value)
-  return o ? o.text : value
-}
+const { PAGE, PAGESIZE, SORT } = QEURY_ITEM_NAMES
 
 const DefaultActions = {
   props: ['data', 'doEdit'],
@@ -38,42 +28,25 @@ export default {
       items: []
     }
   },
-  props: ['cfg', 'saveHooks', 'actionsComponent'],
-  async created () {    
-    await initListData(this.$props, this.$data)
-    await this.load()
+  props: ['cfg', 'query', 'saveHooks', 'actionsComponent'],
+  watch: {
+    '$route': 'fetchData'  // call again the method if the route changes
+  },
+  created () {    
+    this.fetchData()
   },
   computed: {
     fields: function () {
-      let fields = _.filter(this.$data.formconfig, i => {
-        return !_.isUndefined(i.fieldcomponent)
-      })
-      fields = _.map(fields, i => {
-        const f = {
-          key: i.name,
-          label: i.label,
-          sortable: true
-        }
-        if (i.options) {
-          f.formatter = getOptionsFormatter(i.options)
-        }
-        if (i.type === 'date') {
-          f.formatter = formatDate
-        }
-        return f
-      })
-      fields.unshift({ key: 'id', label: '#ID', sortable: true })
-      fields.push({ key: 'actions', label: '' })
-      return fields
+      return getFields(this)
     }
   },
   methods: {
-    load: async function (ctx) {
-      const q = this.$router.currentRoute.query
+    fetchData: async function () {
+      !this.ready && await initListData(this.$props, this.$data)
       const params = {
-        currentPage: q.currentPage || 1,
-        perPage: q.perPage || 10,
-        sort: q.sortBy ? `${q.sortBy}:${q.sortDesc ? 'desc' : 'asc'}` : 'id:asc'
+        currentPage: this.query[PAGE] || 1,
+        perPage: this.query[PAGESIZE] || 10,
+        sort: this.query[SORT] ? this.query[SORT].replace(',', ':') : 'id:asc'
       }
       try {
         this.isBusy = true
@@ -91,9 +64,7 @@ export default {
       }
     },
     setPageSize: function (newSize) {
-      const query = Object.assign({}, this.$router.currentRoute.query, {
-        perPage: newSize
-      })
+      const query = Object.assign({}, this.query, { [PAGESIZE]: newSize })
       this.$router.push({ query })
     },
     add: function () {

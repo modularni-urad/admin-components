@@ -1,12 +1,13 @@
+import { QEURY_ITEM_NAMES } from './consts.js'
+const { PAGE, PAGESIZE } = QEURY_ITEM_NAMES
+
 export default {
   computed: {
     cp: function () {
-      return this.$router.currentRoute.query.currentPage
-        ? Number(this.$router.currentRoute.query.currentPage) : 1
+      return this.$props.query[PAGE] ? Number(this.$props.query[PAGE]) : 1
     },
     pageCount: function () {
-      const pageSize = this.$router.currentRoute.query.perPage
-        ? Number(this.$router.currentRoute.query.perPage) : 10
+      const pageSize = this.query[PAGESIZE] ? Number(this.query[PAGESIZE]) : 10
       return Math.round(this.$props.totalRows / pageSize)
     },
     leftDisabled: function () {
@@ -16,18 +17,14 @@ export default {
       return this.cp === this.pageCount
     }
   },
-  props: ['totalRows'],
+  props: ['totalRows', 'query'],
   methods: {
     left: function () {
-      const query = Object.assign({}, this.$router.currentRoute.query, {
-        currentPage: this.cp - 1
-      })
+      const query = Object.assign({}, this.query, { [PAGE]: this.cp - 1 })
       this.$router.push({ query })
     },
     right: function () {
-      const query = Object.assign({}, this.$router.currentRoute.query, {
-        currentPage: this.cp + 1
-      })
+      const query = Object.assign({}, this.query, { [PAGE]: this.cp + 1 })
       this.$router.push({ query })
     }
   },

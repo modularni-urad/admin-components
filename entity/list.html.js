@@ -14,7 +14,7 @@ export default `
   <table class="table table-sm table-hover table-striped">
     <thead>
       <tr>
-        <THeader v-for="i,idx in fields" :key="idx" :field="i">
+        <THeader v-for="i,idx in fields" :key="idx" :field="i" :query="query">
           {{ i.label }}
         </THeader>
       </tr>
@@ -34,7 +34,7 @@ export default `
     </b-dropdown>
   </div>
 
-  <Paginator :totalRows="totalRows" />
+  <Paginator :totalRows="totalRows" :query="query" />
 
   <b-modal v-if="ready" size="xl" id="modal-add" title="Upravit" hide-footer>
     <ItemForm 

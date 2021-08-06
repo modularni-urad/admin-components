@@ -25,7 +25,13 @@ const cfg = {
 }
 
 const router = new VueRouter({
-  routes: [{path: '/', component: List, props: { cfg } }]
+  routes: [{
+    path: '/', 
+    component: List, 
+    props: route => {
+      return { query: route.query, cfg }
+    }
+  }]
 })
 
 new Vue({
