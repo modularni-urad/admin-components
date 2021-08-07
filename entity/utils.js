@@ -28,6 +28,12 @@ export async function initListData (props, data) {
 function formatDate (value) {
   if (value) {
     value = _.isString(value) ? moment(value) : value
+    return value.format('DD.MM.YYYY')
+  }
+}
+function formatDatetime (value) {
+  if (value) {
+    value = _.isString(value) ? moment(value) : value
     return value.format('DD.MM.YYYY HH:mm')
   }
 }
@@ -53,10 +59,12 @@ export function getFields (self) {
     if (i.type === 'date') {
       f.formatter = formatDate
     }
+    if (i.type === 'datetime') {
+      f.formatter = formatDatetime
+    }
     return f
   })
   fields.unshift({ key: 'id', label: '#ID', sortable: true })
-  fields.push({ key: 'actions', label: '' })
   return fields
 }
 
@@ -70,4 +78,8 @@ export function loadData (props, itemId, store) {
   const filter = { id: itemId }
   const url = `${props.cfg.url}?filter=${JSON.stringify(filter)}`
   return store.dispatch('send', { method: 'get', url })
+}
+
+export function cellData (item, field) {
+  return field.formatter ? field.formatter(item[field.key]) : item[field.key]
 }

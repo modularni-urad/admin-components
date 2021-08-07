@@ -2,25 +2,10 @@
 import Detail from './detail.js'
 import Paginator from './paginator.js'
 import template from './list.html.js'
-import { initListData, getFields } from './utils.js'
+import { initListData, getFields, cellData } from './utils.js'
 import { QEURY_ITEM_NAMES } from './consts.js'
 import THeader from './header.js'
 const { PAGE, PAGESIZE, SORT } = QEURY_ITEM_NAMES
-
-const DefaultActions = {
-  props: ['query', 'row'],
-  methods: {
-    doEdit: function () {
-      const query = Object.assign({}, this.query, { _detail: this.row.id })
-      this.$router.replace({ query })
-    }
-  },
-  template: `
-  <b-button size="sm" variant="primary" @click="doEdit">
-    <i class="fas fa-edit"></i> upravit
-  </b-button>
-  `
-}
 
 export default {
   data: () => {
@@ -32,7 +17,7 @@ export default {
       items: []
     }
   },
-  props: ['cfg', 'query', 'saveHooks', 'actionsComponent'],
+  props: ['cfg', 'query'],
   created () {
     initListData(this.$props, this.$data)
     this.$watch(
@@ -78,10 +63,12 @@ export default {
     add: function () {
       this.$router.replace({ query: Object.assign({}, this.query, { _detail: null }) })
     },
-    cellData: function (item, field) {
-      return item[field.key]
-    }
+    doEdit: function (row) {
+      const query = Object.assign({}, this.query, { _detail: row.id })
+      this.$router.replace({ query })
+    },
+    cellData
   },
-  components: { THeader, Paginator, Detail, DefaultActions },
+  components: { THeader, Paginator, Detail },
   template
 }
