@@ -5,6 +5,7 @@ import {
   WITHOUT_DIACRITICS_VALIDATOR_NAME, WITHOUT_DIACRITICS_VALIDATOR 
 } from './bootstrap-vue-dynamic-form/components/file.js'
 import Tested from './tested_component.js'
+import {initConfig} from './entity/utils.js'
 for (let i in DynComponents) {
   Vue.component(i, DynComponents[i])
 }
@@ -20,19 +21,25 @@ const cfg = {
   listViewName: 'ukoly'
 }
 
-const router = new VueRouter({
-  routes: [{
-    path: '/', 
-    component: Tested, 
-    props: route => {
-      return { query: route.query, cfg }
-    }
-  }]
-})
-const store = Store(router, cfg)
+async function init () {
+  await initConfig(cfg)
 
-new Vue({
-  router,
-  store,
-  template: '<router-view :key="$route.fullPath"></router-view>'
-}).$mount('#app')
+  const router = new VueRouter({
+    routes: [{
+      path: '/', 
+      component: Tested, 
+      props: route => {
+        return { query: route.query, cfg }
+      }
+    }]
+  })
+  const store = Store(router, cfg)
+
+  new Vue({
+    router,
+    store,
+    template: '<router-view :key="$route.fullPath"></router-view>'
+  }).$mount('#app')
+}
+
+init()

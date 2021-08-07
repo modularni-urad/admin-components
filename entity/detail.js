@@ -9,7 +9,7 @@ export default {
       show: this.query._detail !== undefined
     }
   },
-  props: ['query', 'cfg', 'formconfig'],
+  props: ['query', 'cfg'],
   async created () {
     if (this.query._detail) {
       try {
@@ -41,12 +41,10 @@ export default {
   },
   components: { ItemForm },
   template: `
-  <b-modal v-model="show" @hidden="hide" size="xl" title="Upravit" hide-footer>
-    <ItemForm v-if="loaded"
-      :config="formconfig" 
-      :onSubmit="onSubmit" 
-      :item="curr" 
-      :showcancel="true" />
+  <b-modal v-if="loaded" v-model="show" @hidden="hide" size="xl" title="Upravit" hide-footer>
+    <ItemForm :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+      <b-button class="mt-3" @click="hide">Storno</b-button>
+    </ItemForm>
   </b-modal>
   `
 }

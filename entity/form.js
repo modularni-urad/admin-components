@@ -15,15 +15,12 @@ export default {
       return this.$props.item && this.$store.getters.UID !== this.$props.item.manager
     }
   },
-  props: ['item', 'config', 'onSubmit', 'showcancel'],
+  props: ['item', 'config', 'onSubmit'],
   methods: {
     handleSubmit: async function () {
       this.$data.submitting = true
       await this.$props.onSubmit(this.$data.formdata)
       this.$data.submitting = false
-    },
-    cancel () {
-      this.$props.onSubmit() // just call
     }
   },
   template: `
@@ -37,9 +34,9 @@ export default {
       <b-button type="submit" class="mt-3" :disabled="invalid || submitting">
         Uložit
       </b-button>
-      <b-button v-if="$props.showcancel === true" class="mt-3" @click="cancel">
-        Storno
-      </b-button>
+
+      <slot></slot>
+      
       <i v-if="submitting" class="fas fa-spinner fa-spin"></i>
     </form>
   </ValidationObserver>

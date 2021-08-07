@@ -1,8 +1,7 @@
-/* global axios, API, _ */
 import Detail from './detail.js'
 import Paginator from './paginator.js'
 import template from './list.html.js'
-import { initListData, getFields, cellData } from './utils.js'
+import { cellData } from './utils.js'
 import { QEURY_ITEM_NAMES } from './consts.js'
 import THeader from './header.js'
 const { PAGE, PAGESIZE, SORT } = QEURY_ITEM_NAMES
@@ -10,16 +9,13 @@ const { PAGE, PAGESIZE, SORT } = QEURY_ITEM_NAMES
 export default {
   data: () => {
     return {
-      formconfig: null,
       isBusy: false,
       totalRows: null,
-      ready: false,
       items: []
     }
   },
   props: ['cfg', 'query'],
   created () {
-    initListData(this.$props, this.$data)
     this.$watch(
       () => this.$route.query,
       () => {
@@ -28,11 +24,6 @@ export default {
       // fetch the data when the view is created and the data is already being observed
       { immediate: true }
     )
-  },
-  computed: {
-    fields: function () {
-      return getFields(this)
-    }
   },
   methods: {
     fetchData: async function () {

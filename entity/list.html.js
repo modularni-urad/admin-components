@@ -14,19 +14,21 @@ export default `
   <table class="table table-sm table-hover table-striped">
     <thead>
       <tr>
-        <THeader v-for="i,idx in fields" :key="idx" :field="i" :query="query">
+        <THeader v-for="i,idx in cfg.fields" :key="idx" :field="i" :query="query">
           {{ i.label }}
         </THeader>
       </tr>
     </thead>
     <tbody>
-      <tr v-for="i, rowidx in items" :key="rowidx">
-        <slot :row="i" :fields="fields">
-          <td v-for="j,idx in fields" :key="idx">
+
+      <slot :items="items" :fields="cfg.fields">
+        <tr v-for="i, rowidx in items" :key="rowidx">
+          <td v-for="j,idx in cfg.fields" :key="idx">
             <a href="javascript:void(0);" @click="doEdit(i)">{{ cellData(i, j) }}</a>
           </td>
-        </slot>
-      </tr>
+        </tr>
+      </slot>
+      
     </tbody>
   </table>
 
@@ -40,7 +42,7 @@ export default `
 
   <Paginator :totalRows="totalRows" :query="query" />
 
-  <Detail :query="query" :cfg="cfg" :formconfig="formconfig" />
+  <Detail :query="query" :cfg="cfg" />
 
 </div>
 `

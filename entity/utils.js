@@ -1,14 +1,12 @@
 
-export async function initListData (props, data) {
+export async function initConfig (cfg) {
   // load config if it is URL
-  if (_.isString(props.cfg.conf)) {
-    const res = await axios.get(props.cfg.conf)
-    data.formconfig = res.data.attrs
-  } else {
-    data.formconfig = props.cfg.conf
+  if (_.isString(cfg.conf)) {
+    const res = await axios.get(cfg.conf)
+    cfg.conf = res.data.attrs
   }
   // load options if they are URLs
-  const promises = _.reduce(data.formconfig, (acc, i) => {
+  const promises = _.reduce(cfg.conf, (acc, i) => {
     if (i.options && _.isString(i.options)) {
       acc.push(axios.get(i.options).then(res => {
         i.options = i.attrmap ? res.data.map(j => {
@@ -16,13 +14,13 @@ export async function initListData (props, data) {
             text: j[i.attrmap.text || 'text'],
             value: j[i.attrmap.value || 'value']
           }
-        }) : res.data            
+        }) : res.data
       }))
     }
     return acc
   }, [])
   if (promises.length) await Promise.all(promises)
-  data.ready = true
+  cfg.fields = getFields(cfg.conf)
 }
 
 function formatDate (value) {
@@ -43,8 +41,8 @@ const getOptionsFormatter = (options) => (value) => {
   return o ? o.text : value
 }
 
-export function getFields (self) {
-  let fields = _.filter(self.$data.formconfig, i => {
+export function getFields (conf) {
+  let fields = _.filter(conf, i => {
     return !_.isUndefined(i.fieldcomponent)
   })
   fields = _.map(fields, i => {
