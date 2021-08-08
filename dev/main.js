@@ -23,6 +23,16 @@ const cfg = {
 
 async function init () {
   await initConfig(cfg)
+  cfg.filters = [
+    { label: 'music', key: 'f1', value: () => ({ tags:{ like: '%music%' } }) },
+    { label: '1 month old', key: 'f2', value: () => {
+      const now = moment().toISOString()
+      const monthAgo = moment().subtract(1, 'month').toISOString()
+      return {
+        published: { between: [monthAgo, now] }
+      }
+    }}
+  ]
 
   const router = new VueRouter({
     routes: [{

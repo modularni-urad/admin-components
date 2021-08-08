@@ -4,7 +4,8 @@ import template from './list.html.js'
 import { cellData } from './utils.js'
 import { QEURY_ITEM_NAMES } from './consts.js'
 import THeader from './header.js'
-const { PAGE, PAGESIZE, SORT } = QEURY_ITEM_NAMES
+import Filters from './filters.js'
+const { PAGE, PAGESIZE, SORT, FILTER } = QEURY_ITEM_NAMES
 
 export default {
   data: () => {
@@ -31,6 +32,10 @@ export default {
         currentPage: this.query[PAGE] || 1,
         perPage: this.query[PAGESIZE] || 10,
         sort: this.query[SORT] ? this.query[SORT].replace(',', ':') : 'id:asc'
+      }
+      if (this.query[FILTER]) {
+        const f = _.find(this.cfg.filters, { key: this.query[FILTER] })
+        f && Object.assign(params, { filter: JSON.stringify(f.value()) })
       }
       try {
         this.isBusy = true
@@ -60,6 +65,6 @@ export default {
     },
     cellData
   },
-  components: { THeader, Paginator, Detail },
+  components: { THeader, Paginator, Detail, Filters },
   template
 }

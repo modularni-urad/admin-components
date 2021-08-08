@@ -6,6 +6,7 @@ export default `
   </b-breadcrumb>
 
   <div class="float-right">
+    <Filters v-if="cfg.filters" :query="query" :cfg="cfg" />
     <b-button variant="primary" @click="add">
       <i class="fas fa-plus"></i> Přidat
     </b-button>
