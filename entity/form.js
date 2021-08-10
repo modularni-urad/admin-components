@@ -1,9 +1,11 @@
 /* global axios, API, _, moment */
+import { editableAttrs } from './utils.js'
+
 export default {
   data: function () {
     return {
       submitting: false,
-      formdata: _.reduce(this.$props.config, (acc, i) => {
+      formdata: _.reduce(editableAttrs(this.$props.config), (acc, i) => {
         acc[i.name] = this.$props.item ? this.$props.item[i.name] : null
         return acc
       }, {}),

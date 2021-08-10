@@ -41,6 +41,12 @@ const getOptionsFormatter = (options) => (value) => {
   return o ? o.text : value
 }
 
+export function editableAttrs (formattrs) {
+  return _.filter(formattrs, i => {
+    return !_.isUndefined(i.component)
+  })
+}
+
 export function getFields (conf) {
   let fields = _.filter(conf, i => {
     return !_.isUndefined(i.fieldcomponent)
