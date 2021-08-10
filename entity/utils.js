@@ -67,7 +67,7 @@ export function getFields (conf) {
 }
 
 export function defaultSaveData (data, currItem, props, store) {
-  const url = currItem ? `${props.cfg.url}${currItem.id}` : props.cfg.url
+  const url = currItem ? `${props.cfg.url}/${currItem.id}` : props.cfg.url
   const method = currItem ? 'put' : 'post'
   return store.dispatch('send', { method, url, data })
 }
