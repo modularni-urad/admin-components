@@ -53,7 +53,8 @@ export default {
       }
     },
     setPageSize: function (newSize) {
-      const query = Object.assign({}, this.query, { [PAGESIZE]: newSize })
+      const newPage = 1 // TODO: spocitat, na zaklade currPage, aby se nemuselo na zacatek
+      const query = Object.assign({}, this.query, { [PAGESIZE]: newSize, [PAGE]: newPage })
       this.$router.replace({ query })
     },
     add: function () {
