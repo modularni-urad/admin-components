@@ -41,10 +41,17 @@ export default {
   },
   components: { ItemForm },
   template: `
-  <b-modal v-if="loaded" v-model="show" @hidden="hide" size="xl" title="Upravit" hide-footer>
-    <ItemForm :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
-      <b-button class="mt-3" @click="hide">Storno</b-button>
-    </ItemForm>
+  <b-modal v-if="loaded" v-model="show" @hidden="hide" size="xl" 
+      :title="cfg.title || 'upravit'" hide-footer>
+
+    <slot name="form" :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+      <ItemForm :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+        <template v-slot:buttons="{ invalid, submitting }">
+          <b-button :disabled="submitting" class="mt-3" @click="hide">Storno</b-button>
+        </template>
+      </ItemForm>
+    </slot>
+    
   </b-modal>
   `
 }

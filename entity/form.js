@@ -29,17 +29,18 @@ export default {
   <ValidationObserver v-slot="{ invalid }">
     <form @submit.prevent="handleSubmit">
 
-      <component v-for="c in $props.config" :key="c.name"
-        :is="c.component" :config="c" :data="formdata">
-      </component>
+      <slot name="form" :config="$props.config" :data="formdata">
+        <component v-for="c in $props.config" :key="c.name"
+          :is="c.component" :config="c" :data="formdata">
+        </component>
+      </slot>
 
-      <b-button type="submit" class="mt-3" :disabled="invalid || submitting">
-        Uložit
-      </b-button>
-
-      <slot></slot>
-      
-      <i v-if="submitting" class="fas fa-spinner fa-spin"></i>
+      <b-button-group>
+        <b-button type="submit" variant="primary" class="mt-3" :disabled="invalid || submitting">
+          Uložit <i v-if="submitting" class="fas fa-spinner fa-spin"></i>
+        </b-button>
+        <slot name="buttons" :invalid="invalid" :submitting="submitting" />
+      </b-button-group>
     </form>
   </ValidationObserver>
   `

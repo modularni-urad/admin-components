@@ -43,7 +43,8 @@ export default `
 
   <Paginator :totalRows="totalRows" :query="query" />
 
-  <Detail :query="query" :cfg="cfg" />
-
+  <slot name="detail" :query="query" :cfg="cfg">
+    <Detail :query="query" :cfg="cfg" />
+  </slot>
 </div>
 `
