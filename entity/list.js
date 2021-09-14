@@ -39,15 +39,13 @@ export default {
       }
       try {
         this.isBusy = true
-        const res = await axios.get(this.$props.cfg.url, { params })
+        const res = await axios.get(this.$props.cfg.url + '/', { params })
         this.totalRows = res.data.pagination.total
           ? res.data.pagination.total
           : this.totalRows
         this.items = res.data.data
       } catch (err) {
-        const message = err.response.data
-        this.$store.dispatch('toast', { message, type: 'error' })
-        this.items = []
+        this.$store.dispatch('onerror', err)
       } finally {
         this.isBusy = false
       }

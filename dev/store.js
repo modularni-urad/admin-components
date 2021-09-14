@@ -91,6 +91,9 @@ export default function (router, cfg) {
         })
         return axios(opts)
       },
+      onerror: function (ctx, err) {
+        console.error(err)
+      },
       init: async function (ctx, opts) {
         try {
           const res = await axios.get(`${API}/profile`)
