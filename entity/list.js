@@ -39,7 +39,7 @@ export default {
       }
       try {
         this.isBusy = true
-        const res = await axios.get(this.$props.cfg.url + '/', { params })
+        const res = await axios.get(this.$props.cfg.url, { params })
         this.totalRows = res.data.pagination.total
           ? res.data.pagination.total
           : this.totalRows

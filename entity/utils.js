@@ -73,14 +73,14 @@ export function getFields (conf) {
 }
 
 export function defaultSaveData (data, currItem, props, store) {
-  const url = currItem ? `${props.cfg.url}/${currItem.id}` : `${props.cfg.url}/`
+  const url = currItem ? `${props.cfg.url}${currItem.id}` : props.cfg.url
   const method = currItem ? 'put' : 'post'
   return store.dispatch('send', { method, url, data })
 }
 
 export function loadData (props, itemId, store) {
   const filter = { id: itemId }
-  const url = `${props.cfg.url}/?filter=${JSON.stringify(filter)}`
+  const url = `${props.cfg.url}?filter=${JSON.stringify(filter)}`
   return store.dispatch('send', { method: 'get', url })
 }
 
