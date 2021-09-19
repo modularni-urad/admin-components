@@ -8,7 +8,7 @@ export default {
     },
     pageCount: function () {
       const pageSize = this.query[PAGESIZE] ? Number(this.query[PAGESIZE]) : 10
-      return Math.round(this.$props.totalRows / pageSize)
+      return Math.ceil(this.$props.totalRows / pageSize)
     },
     leftDisabled: function () {
       return this.cp === 1
