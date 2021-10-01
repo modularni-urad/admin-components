@@ -16,8 +16,7 @@ VeeValidate.extend('required', VeeValidateRules.required)
 VeeValidate.extend(WITHOUT_DIACRITICS_VALIDATOR_NAME, WITHOUT_DIACRITICS_VALIDATOR)
 
 const cfg = { 
-  url: '/uniapi/posts',
-  conf: '/uniapi/posts/config.json',
+  url: '/api/uni/posts',
   listViewName: 'ukoly'
 }
 

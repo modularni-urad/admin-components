@@ -1,8 +1,9 @@
 
 export async function initConfig (cfg) {
-  // load config if it is URL
-  if (_.isString(cfg.conf)) {
-    const res = await axios.get(cfg.conf)
+  // load config if it is URL or undefined
+  if (_.isString(cfg.conf) || _.isUndefined(cfg.conf)) {
+    const url = _.isUndefined(cfg.conf) ? `${cfg.url}/config.json` : cfg.conf
+    const res = await axios.get(url)
     cfg.conf = res.data.attrs
   }
   // load options if they are URLs

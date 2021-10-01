@@ -13,7 +13,7 @@ bs.init({
   open: false,
   ui: false,
   middleware: [{
-    route: '/uniapi',
+    route: '/api',
     handle: HttpProxy.createProxyMiddleware({ 
       target: 'https://stredni.web.otevrenamesta.cz/', 
       changeOrigin: true 
