@@ -24,7 +24,7 @@ async function init () {
   await initConfig(cfg)
   cfg.filters = [
     { label: 'music', key: 'f1', value: () => ({ tags:{ like: '%music%' } }) },
-    { label: '1 month old', key: 'f2', value: () => {
+    { label: '1 month old', key: 'f2', value: (self) => {
       const now = moment().toISOString()
       const monthAgo = moment().subtract(1, 'month').toISOString()
       return {

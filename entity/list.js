@@ -35,7 +35,7 @@ export default {
       }
       if (this.query[FILTER]) {
         const f = _.find(this.cfg.filters, { key: this.query[FILTER] })
-        f && Object.assign(params, { filter: JSON.stringify(f.value()) })
+        f && Object.assign(params, { filter: JSON.stringify(f.value(this)) })
       }
       try {
         this.isBusy = true
