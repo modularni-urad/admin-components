@@ -16,7 +16,11 @@ export default {
   components: { ListView },
   template: `
   <ListView :query="query" :cfg="cfg">
-    <template v-slot:default="{ items, fields }">
+    <template v-slot:breadcrumb="{ cfg }">
+      <b-breadcrumb-item active>tested component table</b-breadcrumb-item>
+    </template>
+
+    <template v-slot:tbody="{ items, fields }">
       <tr v-for="row,rowidx in items" :key="rowidx" :class="rowClass(row)">
         <td v-for="field,idx in fields" :key="idx">
           {{ cellData(row, field) }}
