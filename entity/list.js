@@ -39,9 +39,7 @@ export default {
       }
       try {
         this.isBusy = true
-        const url = _.isFunction(this.cfg.url)
-          ? this.cfg.url(this.$router.currentRoute) 
-          : this.cfg.url
+        const url = this.cfg.url
         const res = await this.$store.dispatch('send', { method: 'get', url, params })
         this.totalRows = res.data.pagination.total
           ? res.data.pagination.total
