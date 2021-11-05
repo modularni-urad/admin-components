@@ -55,8 +55,8 @@ export function getFields (conf) {
   fields = _.map(fields, i => {
     const f = {
       key: i.name,
-      label: i.label,
-      sortable: true
+      label: i.label || i.name,
+      sortable: i.sortable
     }
     if (i.options) {
       f.formatter = getOptionsFormatter(i.options)
@@ -69,7 +69,6 @@ export function getFields (conf) {
     }
     return f
   })
-  fields.unshift({ key: 'id', label: '#ID', sortable: true })
   return fields
 }
 

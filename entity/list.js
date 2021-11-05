@@ -30,8 +30,10 @@ export default {
     fetchData: async function () {
       const params = {
         currentPage: this.query[PAGE] || 1,
-        perPage: this.query[PAGESIZE] || 10,
-        sort: this.query[SORT] ? this.query[SORT].replace(',', ':') : 'id:asc'
+        perPage: this.query[PAGESIZE] || this.cfg.default_pagesize || 10,
+        sort: this.query[SORT] 
+          ? this.query[SORT].replace(',', ':') 
+          : this.cfg.default_sort || 'id:asc'
       }
       if (this.query[FILTER]) {
         const f = _.find(this.cfg.filters, { key: this.query[FILTER] })
