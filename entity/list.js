@@ -41,7 +41,7 @@ export default {
       }
       try {
         this.isBusy = true
-        const url = this.cfg.url
+        const url = this.cfg.getListUrl ? this.cfg.getListUrl(this) : this.cfg.url
         const res = await this.$store.dispatch('send', { method: 'get', url, params })
         this.totalRows = res.data.pagination.total
           ? res.data.pagination.total

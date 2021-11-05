@@ -1,5 +1,5 @@
 import ItemForm from './form.js'
-import { defaultSaveData, loadData } from './utils.js'
+import { defaultSaveData, defaultLoadData } from './utils.js'
 
 export default {
   data: function () {
@@ -13,11 +13,13 @@ export default {
   async created () {
     if (this.query._detail) {
       try {
-        const req = await loadData(this.$props, this.query._detail, this.$store)
+        const req = this.cfg.loadData
+          ? await this.cfg.loadData(this)
+          : await defaultLoadData(this.query._detail, this)
         this.curr = req.data[0]
         this.loaded = true
-      } catch (e) {
-        alert(e)
+      } catch (err) {
+        this.$store.dispatch('onerror', err)
       }
     } else {
       this.loaded = true
@@ -27,12 +29,11 @@ export default {
     onSubmit: async function (item) {
       if (!item) return this.hide()
       try {
-        const res = await defaultSaveData(item, this.curr, this.$props, this.$store)
+        const res = await defaultSaveData(item, this.curr, this)
         this.$store.dispatch('toast', { message: 'uloženo' })
         this.hide()
       } catch (err) {
-        const message = err.response.data
-        this.$store.dispatch('toast', { message, type: 'error' })
+        this.$store.dispatch('onerror', err)
       }
     },
     hide: function () {

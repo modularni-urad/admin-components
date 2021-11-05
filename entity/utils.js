@@ -72,16 +72,19 @@ export function getFields (conf) {
   return fields
 }
 
-export function defaultSaveData (data, currItem, props, store) {
-  const url = currItem ? `${props.cfg.url}${currItem.id}` : props.cfg.url
+export function defaultSaveData (data, currItem, self) {
+  const url = self.cfg.getSaveUrl
+    ? self.cfg.getSaveUrl(currItem, self)
+    : currItem ? `${self.cfg.url}${currItem.id}` : self.cfg.url
   const method = currItem ? 'put' : 'post'
-  return store.dispatch('send', { method, url, data })
+  return self.$store.dispatch('send', { method, url, data })
 }
 
-export function loadData (props, itemId, store) {
-  const filter = { id: itemId }
-  const url = `${props.cfg.url}?filter=${JSON.stringify(filter)}`
-  return store.dispatch('send', { method: 'get', url })
+export function defaultLoadData (itemId, self) {
+  const url = self.cfg.getLoadUrl
+    ? self.cfg.getLoadUrl(itemId, self)
+    : `${self.cfg.url}?filter=${JSON.stringify({ id: itemId })}`
+  return self.$store.dispatch('send', { method: 'get', url })
 }
 
 export function cellData (item, field) {
