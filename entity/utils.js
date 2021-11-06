@@ -74,12 +74,10 @@ export function getFields (conf) {
 
 function stringifyJSONs (data, cfg) {
   // tohle je potreba, protoze https://knexjs.org/#Schema-json
-  data = Object.assign({}, data)  // clone
   const jsonAttrs = _.filter(cfg.conf, i => i.type === 'json')
   _.each(jsonAttrs, i => {
     data[i.name] = JSON.stringify(data[i.name])
   })
-  return data
 }
 
 export function defaultSaveData (data, currItem, self) {
@@ -87,7 +85,7 @@ export function defaultSaveData (data, currItem, self) {
     ? self.cfg.getSaveUrl(currItem, self)
     : currItem ? `${self.cfg.url}${currItem.id}` : self.cfg.url
   const method = currItem ? 'put' : 'post'
-  data = stringifyJSONs(data, self.cfg)
+  stringifyJSONs(data, self.cfg)
   return self.$store.dispatch('send', { method, url, data })
 }
 

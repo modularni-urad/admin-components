@@ -29,7 +29,11 @@ export default {
     onSubmit: async function (item) {
       if (!item) return this.hide()
       try {
-        const res = await defaultSaveData(item, this.curr, this)
+        const data = this.cfg.prepareData 
+          ? await this.cfg.prepareData(item)
+          : Object.assign({}, item)
+        const res = await defaultSaveData(data, this.curr, this)
+        this.cfg.finishSubmit && await this.cfg.finishSubmit(item, res.data, this)
         this.$store.dispatch('toast', { message: 'uloženo' })
         this.hide()
       } catch (err) {
