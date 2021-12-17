@@ -12,7 +12,7 @@ export default {
         ? this.data[this.config.name]
         : this.$store.state.cfg.defaultMapCenter
       const r = /\d+.\d*,\s*\d+.\d*/g
-      return p.match(r) ? p.split(',') : [49.41812070066643, 14.666748046875002]
+      return p && p.match(r) ? p.split(',') : [49.41812070066643, 14.666748046875002]
     }
     this.$data.position = _extractVal.bind(this)()
   },
