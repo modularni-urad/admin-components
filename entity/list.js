@@ -45,8 +45,8 @@ export default {
         const res = await this.$store.dispatch('send', { method: 'get', url, params })
         this.totalRows = res.data.pagination.total
           ? res.data.pagination.total
-          : this.totalRows
-        this.items = res.data.data
+          : (this.totalRows || res.data.length)
+        this.items = res.data.pagination ? res.data.data : res.data
       } catch (err) {
         this.$store.dispatch('onerror', err)
       } finally {
