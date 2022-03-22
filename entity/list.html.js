@@ -8,11 +8,15 @@ export default `
   </b-breadcrumb>
 
   <div class="float-right">
-    <Filters v-if="cfg.filters" :query="query" :cfg="cfg" />
-    <b-button variant="primary" @click="add">
-      <i class="fas fa-plus"></i> Přidat
-    </b-button>
+    <slot name="rightcontrols" :cfg="cfg">
+      <Filters v-if="cfg.filters" :query="query" :cfg="cfg" />
+      <b-button variant="primary" @click="add">
+        <i class="fas fa-plus"></i> Přidat
+      </b-button>
+    </slot>
   </div>
+
+  <slot name="middle" :cfg="cfg"></slot>
 
   <slot :cfg="cfg">
 
@@ -29,7 +33,7 @@ export default `
         <slot name="tbody" :items="items" :fields="cfg.fields">
           <tr v-for="i, rowidx in items" :key="rowidx">
             <td v-for="j,idx in cfg.fields" :key="idx">
-              <a href="javascript:void(0);" @click="doEdit(i)">{{ cellData(i, j) }}</a>
+              <a @click.prevent="doEdit(i)">{{ cellData(i, j) }}</a>
             </td>
           </tr>
         </slot>
