@@ -89,10 +89,10 @@ export function defaultSaveData (data, currItem, self) {
   return self.$store.dispatch('send', { method, url, data })
 }
 
-export function defaultLoadData (itemId, self) {
+export function defaultLoadData (item, self) {
   const url = self.cfg.getLoadUrl
-    ? self.cfg.getLoadUrl(itemId, self)
-    : `${self.cfg.url}?filter=${JSON.stringify({ id: itemId })}`
+    ? self.cfg.getLoadUrl(item, self)
+    : `${self.cfg.url}?filter=${JSON.stringify({ id: item.id })}`
   return self.$store.dispatch('send', { method: 'get', url })
 }
 

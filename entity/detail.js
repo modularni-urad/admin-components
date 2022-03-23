@@ -1,33 +1,42 @@
 import ItemForm from './form.js'
 import { defaultSaveData, defaultLoadData } from './utils.js'
+import { createNewItem } from './detail_utils.js'
 
 export default {
   data: function () {
     return {
       curr: null,
-      loaded: false,
-      show: this.query._detail !== undefined
+      loaded: false
     }
   },
-  props: ['query', 'cfg'],
+  props: ['query', 'cfg', 'hide', 'detail'],
   async created () {
-    if (this.query._detail) {
+    this.$watch(() => this.detail, () => {
+      switch(this.detail) {
+        case 'new': return this.createInitial()
+        case null: return
+        default: return this.fetchData()
+      }
+    })
+  },
+  methods: {
+    createInitial: function () {
+      this.curr = createNewItem(this.cfg.conf)
+      this.loaded = true
+    },
+    fetchData: async function () {
       try {
         const req = this.cfg.loadData
           ? await this.cfg.loadData(this)
-          : await defaultLoadData(this.query._detail, this)
+          : await defaultLoadData(this.detail, this)
         this.curr = req.data[0]
         this.loaded = true
       } catch (err) {
         this.$store.dispatch('onerror', err)
       }
-    } else {
-      this.loaded = true
-    }
-  },
-  methods: {
+    },
     onSubmit: async function (item) {
-      if (!item) return this.hide()
+      if (!item) return this.hidden()
       try {
         const data = this.cfg.prepareData 
           ? await this.cfg.prepareData(item)
@@ -35,28 +44,30 @@ export default {
         const res = await defaultSaveData(data, this.curr, this)
         this.cfg.finishSubmit && await this.cfg.finishSubmit(item, res.data, this)
         this.$store.dispatch('toast', { message: 'uloženo' })
-        this.hide()
+        this.hidden()
       } catch (err) {
         this.$store.dispatch('onerror', err)
       }
     },
-    hide: function () {
-      this.$router.replace({ query: _.omit(this.query, '_detail') })
+    hidden: function () {
+      this.loaded = false
+      this.hide()
     }
   },
   components: { ItemForm },
   template: `
-  <b-modal v-if="loaded" v-model="show" @hidden="hide" size="xl" 
-      :title="cfg.title || 'upravit'" hide-footer>
+  <div v-if="loaded">
+    <b-modal @hidden="hidden" v-model="loaded" size="xl" :title="cfg.title || 'upravit'" hide-footer>
 
-    <slot name="form" :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
-      <ItemForm :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
-        <template v-slot:buttons="{ invalid, submitting }">
-          <b-button :disabled="submitting" class="mt-3" @click="hide">Storno</b-button>
-        </template>
-      </ItemForm>
-    </slot>
-    
-  </b-modal>
+      <slot name="form" :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+        <ItemForm :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+          <template v-slot:buttons="{ invalid, submitting }">
+            <b-button :disabled="submitting" class="mt-3" @click="hidden">storno</b-button>
+          </template>
+        </ItemForm>
+      </slot>
+      
+    </b-modal>
+  </div>
   `
 }

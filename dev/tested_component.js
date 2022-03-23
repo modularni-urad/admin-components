@@ -4,10 +4,6 @@ import { cellData } from '../entity/utils.js'
 export default {
   props: ['query', 'cfg'],
   methods: {
-    doEdit: function (row) {
-      const query = Object.assign({}, this.query, { _detail: row.id })
-      this.$router.replace({ query })
-    },
     rowClass: function (row) {
       return row.id === 2 ? 'table-success' : ''
     },
@@ -20,7 +16,11 @@ export default {
       <b-breadcrumb-item active>tested component table</b-breadcrumb-item>
     </template>
 
-    <template v-slot:tbody="{ items, fields }">
+    <template v-slot:middle="{ cfg }">
+      <div>pokus</div>
+    </template>
+
+    <template v-slot:tbody="{ items, fields, doEdit }">
       <tr v-for="row,rowidx in items" :key="rowidx" :class="rowClass(row)">
         <td v-for="field,idx in fields" :key="idx">
           {{ cellData(row, field) }}

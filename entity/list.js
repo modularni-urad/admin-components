@@ -12,6 +12,7 @@ export default {
     return {
       isBusy: false,
       totalRows: null,
+      detail: null,
       items: []
     }
   },
@@ -61,13 +62,15 @@ export default {
       this.$router.replace({ query })
     },
     add: function () {
-      this.$router.replace({ query: Object.assign({}, this.query, { _detail: null }) })
+      this.detail = 'new'
     },
     doEdit: function (row) {
-      const query = Object.assign({}, this.query, { _detail: row.id })
-      this.$router.replace({ query })
+      this.detail = row
     },
-    cellData
+    cellData,
+    hide: function () {
+      this.detail = null
+    }
   },
   components: { THeader, Paginator, Detail, Filters },
   template

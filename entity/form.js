@@ -37,7 +37,7 @@ export default {
 
       <b-button-group>
         <b-button type="submit" variant="primary" class="mt-3" :disabled="invalid || submitting">
-          Uložit <i v-if="submitting" class="fas fa-spinner fa-spin"></i>
+          uložit <i v-if="submitting" class="fas fa-spinner fa-spin"></i>
         </b-button>
         <slot name="buttons" :invalid="invalid" :submitting="submitting" />
       </b-button-group>

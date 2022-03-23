@@ -30,7 +30,7 @@ export default `
       </thead>
       <tbody>
 
-        <slot name="tbody" :items="items" :fields="cfg.fields">
+        <slot name="tbody" :items="items" :fields="cfg.fields" :doEdit="doEdit">
           <tr v-for="i, rowidx in items" :key="rowidx">
             <td v-for="j,idx in cfg.fields" :key="idx">
               <a @click.prevent="doEdit(i)">{{ cellData(i, j) }}</a>
@@ -54,7 +54,7 @@ export default `
   </slot>
 
   <slot name="detail" :query="query" :cfg="cfg">
-    <Detail :query="query" :cfg="cfg" />
+    <Detail :query="query" :cfg="cfg" :detail="detail" :hide="hide" />
   </slot>
 </div>
 `
