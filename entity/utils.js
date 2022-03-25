@@ -85,10 +85,13 @@ export function defaultSaveData (data, currItem, self) {
   const id = currItem[self.cfg.idattr || 'id']
   const url = self.cfg.getSaveUrl
     ? self.cfg.getSaveUrl(currItem, self)
-    : inserting ? self.cfg.url : `${self.cfg.url}${id}`
-  const method = inserting ? 'post' : 'put'
+    : inserting ? self.cfg.url : `${self.cfg.url}/${id}`
   stringifyJSONs(data, self.cfg)
-  return self.$store.dispatch('send', { method, url, data })
+  return self.$store.dispatch('send', { 
+    method: inserting ? 'post' : 'put',
+    url: url.replace(/\/\//g, '/'), 
+    data 
+  })
 }
 
 export function defaultLoadData (item, self) {
