@@ -81,18 +81,22 @@ function stringifyJSONs (data, cfg) {
 }
 
 export function defaultSaveData (data, currItem, self) {
+  const inserting = self.detail === 'new'
+  const id = currItem[self.cfg.idattr || 'id']
   const url = self.cfg.getSaveUrl
     ? self.cfg.getSaveUrl(currItem, self)
-    : currItem ? `${self.cfg.url}${currItem.id}` : self.cfg.url
-  const method = currItem ? 'put' : 'post'
+    : inserting ? self.cfg.url : `${self.cfg.url}${id}`
+  const method = inserting ? 'post' : 'put'
   stringifyJSONs(data, self.cfg)
   return self.$store.dispatch('send', { method, url, data })
 }
 
 export function defaultLoadData (item, self) {
+  const idattr = self.cfg.idattr || 'id'
+  const filter = { [idattr]: item[idattr] }
   const url = self.cfg.getLoadUrl
     ? self.cfg.getLoadUrl(item, self)
-    : `${self.cfg.url}?filter=${JSON.stringify({ id: item.id })}`
+    : `${self.cfg.url}?filter=${JSON.stringify(filter)}`
   return self.$store.dispatch('send', { method: 'get', url })
 }
 

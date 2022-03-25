@@ -10,6 +10,11 @@ export default {
     }
   },
   props: ['query', 'cfg', 'hide', 'detail'],
+  computed: {
+    modalOpened: function () {
+      return this.detail !== null
+    }
+  },
   async created () {
     this.$watch(() => this.detail, () => {
       switch(this.detail) {
@@ -56,18 +61,16 @@ export default {
   },
   components: { ItemForm },
   template: `
-  <div v-if="loaded">
-    <b-modal @hidden="hidden" v-model="loaded" size="xl" :title="cfg.title || 'upravit'" hide-footer>
+  <b-modal @hidden="hidden" v-model="modalOpened" size="xl" :title="cfg.title || 'upravit'" hide-footer>
 
-      <slot name="form" :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
-        <ItemForm :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
-          <template v-slot:buttons="{ invalid, submitting }">
-            <b-button :disabled="submitting" class="mt-3" @click="hidden">storno</b-button>
-          </template>
-        </ItemForm>
-      </slot>
-      
-    </b-modal>
-  </div>
+    <slot name="form" :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+      <ItemForm v-if="loaded" :config="cfg.conf" :onSubmit="onSubmit" :item="curr">
+        <template v-slot:buttons="{ invalid, submitting }">
+          <b-button :disabled="submitting" class="mt-3" @click="hidden">storno</b-button>
+        </template>
+      </ItemForm>
+    </slot>
+    
+  </b-modal>
   `
 }
