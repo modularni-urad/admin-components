@@ -89,6 +89,7 @@ export default function (router, cfg) {
         this.state.user.token && Object.assign(opts, {  // for debug only
           headers: { 'Authorization': `Bearer ${this.state.user.token}`}
         })
+        opts.url = opts.url.replace(/\/\//g, '/').replace(':/', '://') // remove //
         return axios(opts)
       },
       onerror: function (ctx, err) {

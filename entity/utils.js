@@ -89,7 +89,7 @@ export function defaultSaveData (data, currItem, self) {
   stringifyJSONs(data, self.cfg)
   return self.$store.dispatch('send', { 
     method: inserting ? 'post' : 'put',
-    url: url.replace(/\/\//g, '/'), 
+    url, 
     data 
   })
 }
