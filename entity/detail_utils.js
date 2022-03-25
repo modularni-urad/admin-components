@@ -18,6 +18,6 @@ function _getDate(match) {
 }
 
 function _getDefault (attr) {
-  const match = attr.default && attr.default.match(dateDefaultRegex)
-  return match ? _getDate(match) : attr.default || ''
+  const match = attr.defaultval && attr.defaultval.match(dateDefaultRegex)
+  return match ? _getDate(match) : attr.defaultval || ''
 }
