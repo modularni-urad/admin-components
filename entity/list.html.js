@@ -8,7 +8,7 @@ export default `
   </b-breadcrumb>
 
   <div class="float-right">
-    <slot name="rightcontrols" :cfg="cfg">
+    <slot name="rightcontrols" :cfg="cfg" :add="add" :query="query">
       <Filters v-if="cfg.filters" :query="query" :cfg="cfg" />
       <b-button variant="primary" @click="add">
         <i class="fas fa-plus"></i> Přidat
