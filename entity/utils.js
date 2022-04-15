@@ -79,6 +79,10 @@ function stringifyJSONs (data, cfg) {
     data[i.name] = JSON.stringify(data[i.name])
   })
 }
+function nullEmptyAttrs (data) {
+  const empty = _.filter(_.keys(data), k => data[k] === '')
+  _.each(empty, k => data[k] = null)
+}
 
 export function defaultSaveData (data, currItem, self) {
   const inserting = self.detail === 'new'
@@ -87,6 +91,7 @@ export function defaultSaveData (data, currItem, self) {
     ? self.cfg.getSaveUrl(currItem, self)
     : inserting ? self.cfg.url : `${self.cfg.url}/${id}`
   stringifyJSONs(data, self.cfg)
+  nullEmptyAttrs(data)
   return self.$store.dispatch('send', { 
     method: inserting ? 'post' : 'put',
     url, 
