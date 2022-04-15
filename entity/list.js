@@ -70,6 +70,7 @@ export default {
     cellData,
     hide: function () {
       this.detail = null
+      this.fetchData()
     }
   },
   components: { THeader, Paginator, Detail, Filters },
