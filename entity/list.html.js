@@ -33,9 +33,17 @@ export default `
         <slot name="tbody" :items="items" :fields="cfg.fields" :doEdit="doEdit">
           <tr v-for="i, rowidx in items" :key="rowidx">
             <td v-for="j,idx in cfg.fields" :key="idx">
-              <a @click.prevent="doEdit(i)">{{ cellData(i, j) }}</a>
+              <span v-if="j.component" :is="j.component" :field="j" :row="i" />
+              <span v-else>{{ cellData(i, j) }}</span>
             </td>
-          </tr>
+            <td>
+              <slot name="actions" :item="i" :fields="cfg.fields" :doEdit="doEdit">
+                <b-button @click.prevent="doEdit(i)">
+                  <i class="fas fa-edit"></i> upravit
+                </b-button>              
+              </slot>
+            </td>
+          </tr>          
         </slot>
         
       </tbody>

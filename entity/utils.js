@@ -21,7 +21,7 @@ export async function initConfig (cfg) {
     return acc
   }, [])
   if (promises.length) await Promise.all(promises)
-  cfg.fields = getFields(cfg.conf)
+  cfg.fields = getFields(cfg)
 }
 
 function formatDate (value) {
@@ -48,11 +48,10 @@ export function editableAttrs (formattrs) {
   })
 }
 
-export function getFields (conf) {
-  let fields = _.filter(conf, i => {
+export function getFields (cfg) {
+  return cfg.conf.filter(i => {
     return !_.isUndefined(i.fieldcomponent)
-  })
-  fields = _.map(fields, i => {
+  }).map(i => {
     const f = {
       key: i.name,
       label: i.label || i.name,
@@ -67,9 +66,12 @@ export function getFields (conf) {
     if (i.type === 'datetime') {
       f.formatter = formatDatetime
     }
+    if (i.fieldcomponent && i.fieldcomponent !== true && i.fieldcomponent !== false 
+        && cfg.fieldcomponents[i.fieldcomponent]) {
+      f.component = cfg.fieldcomponents[i.fieldcomponent]
+    }
     return f
   })
-  return fields
 }
 
 function stringifyJSONs (data, cfg) {

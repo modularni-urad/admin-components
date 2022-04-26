@@ -12,13 +12,13 @@ bs.init({
   port: 8080,
   open: false,
   ui: false,
-  middleware: [{
-    route: '/api',
-    handle: HttpProxy.createProxyMiddleware({ 
-      target: 'https://stredni.web.otevrenamesta.cz/', 
-      changeOrigin: true 
-    })
-  }]
+  // middleware: [{
+  //   route: '/api',
+  //   handle: HttpProxy.createProxyMiddleware({ 
+  //     target: 'https://new.otevrenamesta.cz/', 
+  //     changeOrigin: true 
+  //   })
+  // }]
 })
 bs.watch(DEV_DIR + '/index.html').on('change', bs.reload)
 bs.watch(SRC_DIR + '/**/*.js').on('change', function (filepath, file) {

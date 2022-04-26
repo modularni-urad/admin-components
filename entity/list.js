@@ -5,6 +5,7 @@ import { cellData } from './utils.js'
 import { QEURY_ITEM_NAMES } from './consts.js'
 import THeader from './header.js'
 import Filters from './filters.js'
+// import cellData from './cellData.js'
 const { PAGE, PAGESIZE, SORT, FILTER } = QEURY_ITEM_NAMES
 
 export default {
@@ -73,6 +74,6 @@ export default {
       this.fetchData()
     }
   },
-  components: { THeader, Paginator, Detail, Filters },
+  components: { THeader, Paginator, Detail, Filters, cellData },
   template
 }
