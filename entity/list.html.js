@@ -37,7 +37,7 @@ export default `
               <span v-else>{{ cellData(i, j) }}</span>
             </td>
             <td>
-              <slot name="actions" :item="i" :fields="cfg.fields" :doEdit="doEdit">
+              <slot name="actions" :item="i" :cfg="cfg" :doEdit="doEdit">
                 <b-button @click.prevent="doEdit(i)">
                   <i class="fas fa-edit"></i> upravit
                 </b-button>              

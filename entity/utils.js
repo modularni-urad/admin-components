@@ -66,9 +66,10 @@ export function getFields (cfg) {
     if (i.type === 'datetime') {
       f.formatter = formatDatetime
     }
-    if (i.fieldcomponent && i.fieldcomponent !== true && i.fieldcomponent !== false 
-        && cfg.fieldcomponents[i.fieldcomponent]) {
-      f.component = cfg.fieldcomponents[i.fieldcomponent]
+    if (i.fieldcomponent && i.fieldcomponent !== true && i.fieldcomponent !== false) {
+      f.component = _.isString(i.fieldcomponent) 
+        ? cfg.fieldcomponents[i.fieldcomponent]
+        : i.fieldcomponent
     }
     return f
   })
